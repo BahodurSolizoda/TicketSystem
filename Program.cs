@@ -1,0 +1,34 @@
+using Infrastructure.DataContext;
+using Infrastructure.Interfaces;
+using Infrastructure.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+
+
+builder.Services.AddControllers();
+
+builder.Services.AddOpenApi();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IPurchaseService,PurchaseService>();
+builder.Services.AddScoped<ICustomerService,CustomerService>();
+builder.Services.AddScoped<ILocationService,LocationService>();
+builder.Services.AddScoped<ITicketLocationService,TicketLocationService>();
+builder.Services.AddScoped<DapperContext>();
+
+var app = builder.Build();
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "WebApp v1"));
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
